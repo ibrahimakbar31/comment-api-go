@@ -90,6 +90,24 @@ func DB1Migration(db *db.DB1) {
 			Message: "Comment Value must have string value between 3 - 1000",
 		})
 
+		db.Create(&model.APIError{
+			Code:    401,
+			Name:    "PER_PAGE_MUST_SET",
+			Message: "Per Page value must set",
+		})
+
+		db.Create(&model.APIError{
+			Code:    401,
+			Name:    "PER_PAGE_VALUE_INVALID",
+			Message: "Invalid per Page value",
+		})
+
+		db.Create(&model.APIError{
+			Code:    401,
+			Name:    "PAGE_VALUE_INVALID",
+			Message: "Invalid page value",
+		})
+
 		db.Create(&model.Organization{
 			Code: "xendit1",
 			Name: "Xendit One",

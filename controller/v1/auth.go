@@ -33,7 +33,7 @@ func LoginSubmit(loginCredential LoginCredential, app *middleware.App) (middlewa
 	if loginType == "username" {
 		checkIsUsername := validation.UsernameFormat(loginCredential.LoginID)
 		if checkIsUsername == false {
-			return memberToken, errors.New("LOGIN_ID_INVALID")
+			return memberToken, errors.New("LOGIN_ID_VALUE_INVALID")
 		}
 	}
 

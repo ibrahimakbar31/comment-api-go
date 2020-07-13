@@ -3,13 +3,13 @@ package validation
 import (
 	"regexp"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/ibrahimakbar31/comment-api-go/core/model"
 )
 
 //EmailFormat function to validate email
 func EmailFormat(input string) bool {
-	rgxEmail := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
-	checkIsEmail := rgxEmail.MatchString(input)
+	checkIsEmail := govalidator.IsEmail(input)
 	return checkIsEmail
 }
 
