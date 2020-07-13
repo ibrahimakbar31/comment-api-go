@@ -1,0 +1,40 @@
+{
+    "Port": "8000",
+    "Timezone": "Asia/Jakarta",
+    "SecretKey": "Th1sIs5ecr3tK3Y",
+    "Version": "1.0.0.0",
+    "Migration": true,
+    "Development": {
+        "DB1": {
+            "Brand": "postgres",
+            "Host": "127.0.0.1",
+            "Port": "5432",
+            "User": "postgres",
+            "Password": "123456",
+            "DBName": "comment_db_master"
+        },
+        "AvatarURL": "https://thisurlfromconfig.com"
+    },
+    "staging": {
+        "DB1": {
+            "Brand": "",
+            "Host": "",
+            "Port": "",
+            "User": "",
+            "Password": "",
+            "DBName": ""
+        },
+        "AvatarURL": ""
+    },
+    "Production": {
+        "DB1": {
+            "Brand": "postgres",
+            "Host": "",
+            "Port": "",
+            "User": "",
+            "Password": "",
+            "DBName": ""
+        },
+        "AvatarURL": ""
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "watch": ["*"],
+    "ext": "go graphql",
+    "ignore": ["*gen*.go"],
+    "exec": "go build main.go && c:/goprojectmodules/comment-api-go/main || exit 1"
+}
