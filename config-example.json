@@ -16,9 +16,9 @@
         "TokenExpMinutes": 1440,
         "AvatarURL": "https://thisurlfromconfig.com"
     },
-    "staging": {
+    "Staging": {
         "DB1": {
-            "Brand": "",
+            "Brand": "postgres",
             "Host": "",
             "Port": "",
             "User": "",
