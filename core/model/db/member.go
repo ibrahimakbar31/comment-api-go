@@ -36,6 +36,5 @@ func (db *DB1) GetMembersByOrganizationID(organizationID uuid.UUID, pagination m
 		query = query.Limit(limit).Offset(offset)
 	}
 	query = query.Where("organization_members.organization_id = ?", organizationID.String()).Where("organization_members.deleted_at is NULL").Preload("Language").Order("members.follower_count desc").Find(&members)
-
 	return members, err
 }

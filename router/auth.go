@@ -6,21 +6,21 @@ import (
 	"github.com/ibrahimakbar31/comment-api-go/middleware"
 )
 
-//AuthLoginV1Output struct
-type AuthLoginV1Output struct {
+//AuthLoginResponse struct
+type AuthLoginResponse struct {
 	Message string           `json:"message" groups:"login"`
 	Token   middleware.Token `json:"token" groups:"login"`
 }
 
-//AuthV1 router
-func AuthV1(routeGroup *gin.RouterGroup, app *middleware.App) {
-	authV1 := routeGroup.Group("/auth")
-	authV1.POST("/login", func(c *gin.Context) {
+//Auth router
+func Auth(routeGroup *gin.RouterGroup, app *middleware.App) {
+	Auth := routeGroup.Group("/auth")
+	Auth.POST("/login", func(c *gin.Context) {
 		var err error
-		var output AuthLoginV1Output
+		var output AuthLoginResponse
 		var loginCredential v1.LoginCredential
 		c.ShouldBindJSON(&loginCredential)
-		memberToken, err := v1.LoginSubmit(loginCredential, app)
+		memberToken, err := v1.SubmitLogin(loginCredential, app)
 		output.Message = "success"
 		output.Token = memberToken.Token
 		var outputSend = middleware.Output{

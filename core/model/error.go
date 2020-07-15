@@ -18,8 +18,3 @@ type APIErrorMessage struct {
 	Language   Language `gorm:"foreignkey:ID;association_foreignkey:LanguageID" json:"language" groups:"error"`
 	Text       string   `gorm:"size:255" json:"text" groups:"error"`
 }
-
-//APIErrorOutput struct. Define error API output
-type APIErrorOutput struct {
-	Error APIError `gorm:"" json:"error" groups:"error"`
-}

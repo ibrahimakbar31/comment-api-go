@@ -13,7 +13,7 @@ type Member struct {
 	Email               string               `gorm:"size:200;unique_index;" json:"email" groups:"member,orgComments,membersOrganization"`
 	Username            string               `gorm:"size:200;unique_index" json:"username" groups:"member,orgComments,membersOrganization"`
 	Name                string               `gorm:"size:100" json:"name" groups:"member,orgComments,membersOrganization"`
-	Avatar              string               `gorm:"size:255" json:"avatar" groups:"member,membersOrganization"`
+	Avatar              string               `gorm:"size:255" json:"avatar" groups:"member,membersOrganization,orgComments"`
 	LanguageID          string               `gorm:"size:5" json:"" groups:""`
 	Language            Language             `gorm:"foreignkey:ID;association_foreignkey:LanguageID" json:"language" groups:"member,membersOrganization"`
 	Password            string               `gorm:"size:255" json:"" groups:""`

@@ -31,13 +31,13 @@ type MembersGetV1Output struct {
 	model.MembersPagination
 }
 
-//OrgsV1 router
-func OrgsV1(routeGroup *gin.RouterGroup, app *middleware.App) {
-	orgsV1 := routeGroup.Group("/orgs/:orgCode")
-	orgsV1.Use(app.UserValidate("auth"))
-	orgsCommentsV1 := orgsV1.Group("/comments")
-	orgsCommentsV1.Use(app.UserValidate("memberInOrganization"))
-	orgsCommentsV1.POST("/", func(c *gin.Context) {
+//Orgs router
+func Orgs(routeGroup *gin.RouterGroup, app *middleware.App) {
+	Orgs := routeGroup.Group("/orgs/:orgCode")
+	Orgs.Use(app.ValidateUser("auth"))
+	orgComments := Orgs.Group("/comments")
+	orgComments.Use(app.ValidateUser("memberInOrganization"))
+	orgComments.POST("/", func(c *gin.Context) {
 		var commentCreate model.CommentCreate
 		c.ShouldBindJSON(&commentCreate)
 		comment, err := v1.CreateComment(commentCreate, app, c)
@@ -54,7 +54,7 @@ func OrgsV1(routeGroup *gin.RouterGroup, app *middleware.App) {
 		}
 		outputSend.Handler()
 	})
-	orgsCommentsV1.GET("/", app.InputValidation("getPaginationQuery"), func(c *gin.Context) {
+	orgComments.GET("/", app.ValidateInput("getPaginationQuery"), func(c *gin.Context) {
 		commentsPagination, err := v1.GetCommentsByOrganization(app, c)
 		output := CommentsGetV1Output{
 			Message:            "success",
@@ -69,8 +69,8 @@ func OrgsV1(routeGroup *gin.RouterGroup, app *middleware.App) {
 		}
 		outputSend.Handler()
 	})
-	orgsCommentsV1.DELETE("/", func(c *gin.Context) {
-		deleteCount, err := v1.DeleteCommentByOrganization(app, c)
+	orgComments.DELETE("/", func(c *gin.Context) {
+		deleteCount, err := v1.DeleteCommentsByOrganization(app, c)
 		output := CommentsDeleteV1Output{
 			Message:     "success",
 			DeleteCount: deleteCount,
@@ -85,9 +85,9 @@ func OrgsV1(routeGroup *gin.RouterGroup, app *middleware.App) {
 		outputSend.Handler()
 	})
 
-	orgsMembersV1 := orgsV1.Group("/members")
-	orgsMembersV1.Use(app.UserValidate("memberInOrganization"))
-	orgsMembersV1.GET("/", app.InputValidation("getPaginationQuery"), func(c *gin.Context) {
+	orgMembers := Orgs.Group("/members")
+	orgMembers.Use(app.ValidateUser("memberInOrganization"))
+	orgMembers.GET("/", app.ValidateInput("getPaginationQuery"), func(c *gin.Context) {
 		membersPagination, err := v1.GetMembersByOrganization(app, c)
 		output := MembersGetV1Output{
 			Message:           "success",
@@ -102,5 +102,4 @@ func OrgsV1(routeGroup *gin.RouterGroup, app *middleware.App) {
 		}
 		outputSend.Handler()
 	})
-
 }

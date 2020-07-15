@@ -69,8 +69,8 @@ func GetCommentsByOrganization(app *middleware.App, c *gin.Context) (model.Comme
 	return commentsPagination, err
 }
 
-//DeleteCommentByOrganization function
-func DeleteCommentByOrganization(app *middleware.App, c *gin.Context) (int64, error) {
+//DeleteCommentsByOrganization function
+func DeleteCommentsByOrganization(app *middleware.App, c *gin.Context) (int64, error) {
 	var err error
 	var deleteCount int64
 	organization, ok := c.MustGet("organization").(model.Organization)

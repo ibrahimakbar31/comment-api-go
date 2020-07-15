@@ -30,13 +30,14 @@ type MemberToken struct {
 	Token  Token
 }
 
-//TokenGenerate function
-func TokenGenerate(member model.Member) (MemberToken, error) {
+//GenerateToken function
+func GenerateToken(member model.Member) (MemberToken, error) {
 	secretKey := viper.GetString("SecretKey")
 	jwtKey := []byte(secretKey)
 	var output Token
 	var err error
-	expirationTime := time.Now().Add(1440 * time.Minute)
+	expMinutes := viper.GetInt(viper.GetString("Env") + ".TokenExpMinutes")
+	expirationTime := time.Now().Add(time.Duration(expMinutes) * time.Minute)
 	claims := &Claims{
 		MemberID: member.ID,
 		StandardClaims: jwt.StandardClaims{
@@ -91,7 +92,6 @@ func (token Token) Validate(app *App) (MemberToken, error) {
 	} else {
 		err = errors.New("UNAUTHORIZED")
 	}
-
 	if err == nil {
 		db := app.DB1
 		memberToken.Member, err = db.GetMemberByID(memberToken.Member.ID)
@@ -99,21 +99,19 @@ func (token Token) Validate(app *App) (MemberToken, error) {
 			return memberToken, err
 		}
 	}
-
 	return memberToken, err
 }
 
 //Refresh function to refresh token - not done
-func (token *Token) Refresh(app *App) (MemberToken, error) {
+func (token Token) Refresh(app *App) (MemberToken, error) {
 	var err error
 	var memberToken MemberToken
-
 	if err == nil {
 		if memberToken.Token.Expire.Sub(time.Now()) > 30*time.Second {
 			return memberToken, errors.New("TOKEN_STILL_VALID")
 		}
 	}
-
-	memberToken, err = TokenGenerate(memberToken.Member)
+	//refresh function here
+	memberToken, err = GenerateToken(memberToken.Member)
 	return memberToken, err
 }

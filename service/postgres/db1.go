@@ -9,8 +9,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-//DB1Connect initial connection DB1
-func DB1Connect() (*db.DB1, error) {
+//ConnectDB1 initial connection DB1
+func ConnectDB1() (*db.DB1, error) {
 	var err error
 	db1Host := viper.GetString(viper.GetString("Env") + ".DB1.Host")
 	db1Port := viper.GetString(viper.GetString("Env") + ".DB1.Port")

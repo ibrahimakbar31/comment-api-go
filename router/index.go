@@ -12,6 +12,6 @@ func InitRouterV1(routeGroup *gin.RouterGroup, app *middleware.App) {
 	routeGroup.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "success"})
 	})
-	AuthV1(routeGroup, app)
-	OrgsV1(routeGroup, app)
+	Auth(routeGroup, app)
+	Orgs(routeGroup, app)
 }

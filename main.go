@@ -21,7 +21,7 @@ func main() {
 	var app middleware.App
 	//var postgresDB postgres.DB
 	//add db connect here
-	app.DB1, err = postgres.DB1Connect()
+	app.DB1, err = postgres.ConnectDB1()
 	if err != nil {
 		fmt.Println("cannot connect DB: ", err)
 		os.Exit(1)
@@ -58,7 +58,7 @@ func setEnv() {
 }
 
 func initConfigFile() {
-	viper.SetConfigName("config")
+	viper.SetConfigName("config-example")
 	viper.SetConfigType("json")
 	viper.AddConfigPath(".")
 	if err := viper.ReadInConfig(); err != nil {

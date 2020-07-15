@@ -13,6 +13,7 @@
             "Password": "123456",
             "DBName": "comment_db_master"
         },
+        "TokenExpMinutes": 1440,
         "AvatarURL": "https://thisurlfromconfig.com"
     },
     "staging": {
@@ -24,6 +25,7 @@
             "Password": "",
             "DBName": ""
         },
+        "TokenExpMinutes": 1,
         "AvatarURL": ""
     },
     "Production": {
@@ -35,6 +37,7 @@
             "Password": "",
             "DBName": ""
         },
+        "TokenExpMinutes": 1,
         "AvatarURL": ""
     }
 }

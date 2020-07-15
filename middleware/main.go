@@ -38,30 +38,30 @@ func (output Output) Handler() {
 		var errData model.APIError
 		err := db.Where("name = ?", output.Err.Error()).First(&errData).Error
 		if err != nil {
-			ErrorOutput(output.Ctx, output.Err)
+			ResponseError(output.Ctx, output.Err)
 		} else {
-			marshalData, _ := MarshalOutput([]string{"error"}, errData)
+			marshalData, _ := GenerateMarshal([]string{"error"}, errData)
 			output.Ctx.JSON(errData.Code, marshalData)
 		}
 	} else {
-		var marshalData, _ = MarshalOutput([]string{output.Group}, output.StructData)
+		var marshalData, _ = GenerateMarshal([]string{output.Group}, output.StructData)
 		output.Ctx.JSON(http.StatusOK, marshalData)
 	}
 }
 
-//ErrorOutput func
-func ErrorOutput(c *gin.Context, err error) {
+//ResponseError func
+func ResponseError(c *gin.Context, err error) {
 	var errData model.APIError
 	errData.ID = 0
 	errData.Code = 400
 	errData.Name = "UNKNOWN_ERROR"
 	errData.Message = err.Error()
-	var marshalData, _ = MarshalOutput([]string{"error"}, errData)
+	var marshalData, _ = GenerateMarshal([]string{"error"}, errData)
 	c.JSON(errData.Code, marshalData)
 }
 
-//MarshalOutput function. For generate error output
-func MarshalOutput(groups []string, structModel interface{}) (interface{}, error) {
+//GenerateMarshal function. For generate error output
+func GenerateMarshal(groups []string, structModel interface{}) (interface{}, error) {
 	ver, _ := version.NewVersion(viper.GetString("Version"))
 	o := &sheriff.Options{
 		Groups:     groups,
@@ -74,8 +74,8 @@ func MarshalOutput(groups []string, structModel interface{}) (interface{}, error
 	return outputInterface, nil
 }
 
-//UserValidate to validate user route
-func (app *App) UserValidate(validationName string) gin.HandlerFunc {
+//ValidateUser to validate user route
+func (app *App) ValidateUser(validationName string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		switch validationName {
 		case "auth":
@@ -133,8 +133,8 @@ func (app *App) UserValidate(validationName string) gin.HandlerFunc {
 	}
 }
 
-//InputValidation function
-func (app *App) InputValidation(validationName string) gin.HandlerFunc {
+//ValidateInput function
+func (app *App) ValidateInput(validationName string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		switch validationName {
 		case "getPaginationQuery":

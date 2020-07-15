@@ -15,8 +15,8 @@ type LoginCredential struct {
 	Password string `json:"password" valid:"stringlength(1|200)~PASSWORD_VALUE_INVALID" groups:"member"`
 }
 
-//LoginSubmit function
-func LoginSubmit(loginCredential LoginCredential, app *middleware.App) (middleware.MemberToken, error) {
+//SubmitLogin function
+func SubmitLogin(loginCredential LoginCredential, app *middleware.App) (middleware.MemberToken, error) {
 	var memberToken middleware.MemberToken
 	var err error
 	db := app.DB1
@@ -25,13 +25,13 @@ func LoginSubmit(loginCredential LoginCredential, app *middleware.App) (middlewa
 	if err != nil {
 		return memberToken, err
 	}
-	checkIsEmail := validation.EmailFormat(loginCredential.LoginID)
+	checkIsEmail := validation.ValidEmailFormat(loginCredential.LoginID)
 	if checkIsEmail == true {
 		loginType = "email"
 	}
 
 	if loginType == "username" {
-		checkIsUsername := validation.UsernameFormat(loginCredential.LoginID)
+		checkIsUsername := validation.ValidUsernameFormat(loginCredential.LoginID)
 		if checkIsUsername == false {
 			return memberToken, errors.New("LOGIN_ID_VALUE_INVALID")
 		}
@@ -47,7 +47,7 @@ func LoginSubmit(loginCredential LoginCredential, app *middleware.App) (middlewa
 		return memberToken, errors.New("LOGIN_INVALID")
 	}
 
-	memberToken, err = middleware.TokenGenerate(memberToken.Member)
+	memberToken, err = middleware.GenerateToken(memberToken.Member)
 	if err != nil {
 		return memberToken, errors.New("LOGIN_TOKEN_ERROR")
 	}

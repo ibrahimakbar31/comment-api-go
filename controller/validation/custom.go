@@ -7,14 +7,14 @@ import (
 	"github.com/ibrahimakbar31/comment-api-go/core/model"
 )
 
-//EmailFormat function to validate email
-func EmailFormat(input string) bool {
+//ValidEmailFormat function to validate email
+func ValidEmailFormat(input string) bool {
 	checkIsEmail := govalidator.IsEmail(input)
 	return checkIsEmail
 }
 
-//UsernameFormat function to validate username
-func UsernameFormat(input string) bool {
+//ValidUsernameFormat function to validate username
+func ValidUsernameFormat(input string) bool {
 	rgxUsername := regexp.MustCompile("^[a-zA-Z0-9_]*$")
 	checkIsUsername := rgxUsername.MatchString(input)
 	return checkIsUsername
