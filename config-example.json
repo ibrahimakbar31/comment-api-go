@@ -19,14 +19,14 @@
     "Staging": {
         "DB1": {
             "Brand": "postgres",
-            "Host": "",
-            "Port": "",
-            "User": "",
-            "Password": "",
-            "DBName": ""
+            "Host": "0.0.0.0",
+            "Port": "5432",
+            "User": "postgres",
+            "Password": "123456",
+            "DBName": "comment_db_master"
         },
-        "TokenExpMinutes": 1,
-        "AvatarURL": ""
+        "TokenExpMinutes": 1440,
+        "AvatarURL": "https://thisurlfromconfig.com"
     },
     "Production": {
         "DB1": {
