@@ -19,7 +19,7 @@
     "Staging": {
         "DB1": {
             "Brand": "postgres",
-            "Host": "0.0.0.0",
+            "Host": "172.23.240.1",
             "Port": "5432",
             "User": "postgres",
             "Password": "123456",
