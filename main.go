@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/ibrahimakbar31/comment-api-go/middleware"
 	"github.com/ibrahimakbar31/comment-api-go/router"
 	"github.com/ibrahimakbar31/comment-api-go/service/postgres"
@@ -50,8 +51,10 @@ func setEnv() {
 	if len(getEnv) > 0 {
 		if getEnv == "production" {
 			viper.Set("Env", "Production")
+			gin.SetMode("release")
 		} else if getEnv == "staging" {
 			viper.Set("Env", "Staging")
+			gin.SetMode("release")
 		}
 	}
 	fmt.Println("Environment: " + viper.GetString("Env"))
