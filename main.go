@@ -60,7 +60,7 @@ func setEnv() {
 func initConfigFile() {
 	getFilename := os.Getenv("GOCONFIGFILENAME")
 	if getFilename == "" {
-		getFilename = "config"
+		getFilename = "config-example"
 	}
 	viper.SetConfigName(getFilename)
 	viper.SetConfigType("json")
