@@ -13,10 +13,7 @@ func DB1Migration(db *db.DB1) {
 		addData = true
 	}
 
-	db.AutoMigrate(&model.Language{}, &model.APIError{}, &model.APIErrorMessage{}, &model.Organization{}, &model.Member{}, &model.OrganizationMember{}, &model.Comment{})
-
-	db.Model(&model.APIErrorMessage{}).AddForeignKey("language_id", "languages(id)", "CASCADE", "CASCADE")
-	db.Model(&model.APIErrorMessage{}).AddForeignKey("api_error_id", "api_errors(id)", "CASCADE", "CASCADE")
+	db.AutoMigrate(&model.Language{}, &model.APIError{}, &model.Organization{}, &model.Member{}, &model.OrganizationMember{}, &model.Comment{})
 
 	db.Model(&model.Member{}).AddForeignKey("language_id", "languages(id)", "CASCADE", "CASCADE")
 
@@ -124,7 +121,7 @@ func DB1Migration(db *db.DB1) {
 			Name:           "Ibrahim One",
 			Avatar:         "ibrahim1.jpg",
 			LanguageID:     "EN",
-			Password:       "$2a$04$XYyDwLh4C39VLqs0bB2SOuLwii4sqKD2yCSI4QW11bMyW5PPJ6wzG",
+			Password:       "$2a$10$UPGfeGEV4PJ7udus3Zl14uNwcYJcUASqkZCBXUAGv4ZGsMpkqNh2K",
 			FollowerCount:  50,
 			FollowingCount: 24,
 		})
@@ -135,7 +132,7 @@ func DB1Migration(db *db.DB1) {
 			Name:           "Ibrahim Two",
 			Avatar:         "ibrahim2.jpg",
 			LanguageID:     "EN",
-			Password:       "$2a$04$XYyDwLh4C39VLqs0bB2SOuLwii4sqKD2yCSI4QW11bMyW5PPJ6wzG",
+			Password:       "$2a$10$UPGfeGEV4PJ7udus3Zl14uNwcYJcUASqkZCBXUAGv4ZGsMpkqNh2K",
 			FollowerCount:  15,
 			FollowingCount: 31,
 		})
@@ -146,7 +143,7 @@ func DB1Migration(db *db.DB1) {
 			Name:           "Ibrahim Three",
 			Avatar:         "ibrahim3.jpg",
 			LanguageID:     "EN",
-			Password:       "$2a$04$XYyDwLh4C39VLqs0bB2SOuLwii4sqKD2yCSI4QW11bMyW5PPJ6wzG",
+			Password:       "$2a$10$UPGfeGEV4PJ7udus3Zl14uNwcYJcUASqkZCBXUAGv4ZGsMpkqNh2K",
 			FollowerCount:  21,
 			FollowingCount: 42,
 		})
@@ -157,7 +154,7 @@ func DB1Migration(db *db.DB1) {
 			Name:           "Ibrahim Four",
 			Avatar:         "ibrahim4.jpg",
 			LanguageID:     "EN",
-			Password:       "$2a$04$XYyDwLh4C39VLqs0bB2SOuLwii4sqKD2yCSI4QW11bMyW5PPJ6wzG",
+			Password:       "$2a$10$UPGfeGEV4PJ7udus3Zl14uNwcYJcUASqkZCBXUAGv4ZGsMpkqNh2K",
 			FollowerCount:  73,
 			FollowingCount: 64,
 		})
@@ -168,7 +165,7 @@ func DB1Migration(db *db.DB1) {
 			Name:           "Ibrahim Five",
 			Avatar:         "ibrahim5.jpg",
 			LanguageID:     "EN",
-			Password:       "$2a$04$XYyDwLh4C39VLqs0bB2SOuLwii4sqKD2yCSI4QW11bMyW5PPJ6wzG",
+			Password:       "$2a$10$UPGfeGEV4PJ7udus3Zl14uNwcYJcUASqkZCBXUAGv4ZGsMpkqNh2K",
 			FollowerCount:  61,
 			FollowingCount: 11,
 		})

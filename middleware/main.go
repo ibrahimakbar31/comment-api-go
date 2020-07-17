@@ -12,6 +12,7 @@ import (
 	"github.com/ibrahimakbar31/comment-api-go/controller/validation"
 	"github.com/ibrahimakbar31/comment-api-go/core/model"
 	"github.com/ibrahimakbar31/comment-api-go/core/model/db"
+	"github.com/ibrahimakbar31/comment-api-go/service/postgres"
 	"github.com/liip/sheriff"
 	"github.com/spf13/viper"
 )
@@ -31,7 +32,7 @@ type Output struct {
 	App        *App
 }
 
-//Handler function
+//Handler function to handle JSON response output
 func (output Output) Handler() {
 	if output.Err != nil {
 		db := output.App.DB1
@@ -49,7 +50,36 @@ func (output Output) Handler() {
 	}
 }
 
-//ResponseError func
+//ResponseHandler function to handle response data from controller
+func (app *App) ResponseHandler(f func(*gin.Context, *App) (interface{}, string, error)) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		interfaceData, groupName, err := f(c, app)
+		/*var responseData = Output{
+			Ctx:        c,
+			Err:        err,
+			Group:      group,
+			StructData: interfaceData,
+			App:        app,
+		}
+		responseData.Handler()*/
+		if err != nil {
+			db := app.DB1
+			var errData model.APIError
+			err := db.Where("name = ?", err.Error()).First(&errData).Error
+			if err != nil {
+				ResponseError(c, err)
+			} else {
+				marshalData, _ := GenerateMarshal([]string{"error"}, errData)
+				c.JSON(errData.Code, marshalData)
+			}
+		} else {
+			var marshalData, _ = GenerateMarshal([]string{groupName}, interfaceData)
+			c.JSON(http.StatusOK, marshalData)
+		}
+	}
+}
+
+//ResponseError function
 func ResponseError(c *gin.Context, err error) {
 	var errData model.APIError
 	errData.ID = 0
@@ -60,7 +90,7 @@ func ResponseError(c *gin.Context, err error) {
 	c.JSON(errData.Code, marshalData)
 }
 
-//GenerateMarshal function. For generate error output
+//GenerateMarshal function to generate marshal interface
 func GenerateMarshal(groups []string, structModel interface{}) (interface{}, error) {
 	ver, _ := version.NewVersion(viper.GetString("Version"))
 	o := &sheriff.Options{
@@ -197,4 +227,14 @@ func (app *App) GenerateError(c *gin.Context, err error) {
 		App:        app,
 	}
 	output.Handler()
+}
+
+// GetDB function to get a database connection
+func (app *App) GetDB() error {
+	var err error
+	app.DB1, err = postgres.ConnectDB1()
+	if err != nil {
+		return errors.New("cannot connect DB")
+	}
+	return nil
 }

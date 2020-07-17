@@ -20,19 +20,22 @@ func init() {
 func main() {
 	var err error
 	var app middleware.App
-	//var postgresDB postgres.DB
 	//add db connect here
-	app.DB1, err = postgres.ConnectDB1()
+	/*app.DB1, err = postgres.ConnectDB1()
+	if err != nil {
+		fmt.Println("cannot connect DB: ", err)
+		os.Exit(1)
+	}*/
+	err = app.GetDB()
 	if err != nil {
 		fmt.Println("cannot connect DB: ", err)
 		os.Exit(1)
 	}
-	err = app.DB1.DB.DB().Ping()
+	/*err = app.DB1.DB.DB().Ping()
 	if err != nil {
-		println("ga konek")
+		println("cannot connect DB")
 		os.Exit(1)
-	}
-
+	}*/
 	isMigration := viper.GetBool("Migration")
 	if isMigration == true {
 		println("migrating table....")

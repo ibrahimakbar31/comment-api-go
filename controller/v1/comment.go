@@ -11,75 +11,95 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+//CommentPostResponse struct
+type CommentPostResponse struct {
+	Message string        `default:"success" json:"message" groups:"comment"`
+	Comment model.Comment `json:"comment" groups:"comment"`
+}
+
+//CommentsGetResponse struct
+type CommentsGetResponse struct {
+	Message string `default:"success" json:"message" groups:"orgComments"`
+	model.CommentsPagination
+}
+
+//CommentsDeleteResponse struct
+type CommentsDeleteResponse struct {
+	Message     string `default:"success" json:"message" groups:"deleteComments"`
+	DeleteCount int64  `json:"delete_count" groups:"deleteComments"`
+}
+
 //CreateComment function
-func CreateComment(commentInput model.CommentCreate, app *middleware.App, c *gin.Context) (model.Comment, error) {
+func CreateComment(c *gin.Context, app *middleware.App) (interface{}, string, error) {
 	var err error
-	var comment model.Comment
+	var commentInput model.CommentCreate
+	var response CommentPostResponse
+	group := "comment"
 	memberToken, ok := c.MustGet("memberToken").(middleware.MemberToken)
 	if !ok {
-		return comment, errors.New("TOKEN_DATA_INVALID")
+		return response, group, errors.New("TOKEN_DATA_INVALID")
 	}
 	organization, ok := c.MustGet("organization").(model.Organization)
 	if !ok {
-		return comment, errors.New("TOKEN_DATA_INVALID")
+		return response, group, errors.New("TOKEN_DATA_INVALID")
 	}
+	c.ShouldBindJSON(&commentInput)
 	_, err = govalidator.ValidateStruct(commentInput)
 	if err != nil {
-		return comment, err
+		errs := err.(govalidator.Errors).Errors()
+		return response, group, errs[0]
 	}
-	copier.Copy(&comment, commentInput)
-	comment.MemberID = uuid.NullUUID{
+	copier.Copy(&response.Comment, commentInput)
+	response.Comment.MemberID = uuid.NullUUID{
 		UUID:  memberToken.Member.ID,
 		Valid: true,
 	}
-	comment.Member = memberToken.Member
-	comment.OrganizationID = uuid.NullUUID{
+	response.Comment.Member = memberToken.Member
+	response.Comment.OrganizationID = uuid.NullUUID{
 		UUID:  organization.ID,
 		Valid: true,
 	}
-	comment.Organization = organization
-
-	comment, err = app.DB1.CreateComment(comment)
+	response.Comment.Organization = organization
+	err = app.DB1.CreateComment(&response.Comment)
 	if err != nil {
-		return comment, err
+		return response, group, err
 	}
-
-	return comment, err
+	return response, group, err
 }
 
 //GetCommentsByOrganization function
-func GetCommentsByOrganization(app *middleware.App, c *gin.Context) (model.CommentsPagination, error) {
+func GetCommentsByOrganization(c *gin.Context, app *middleware.App) (interface{}, string, error) {
 	var err error
 	var commentsPagination model.CommentsPagination
-	var pagination model.Pagination
+	var response CommentsGetResponse
+	group := "orgComments"
 	organization, ok := c.MustGet("organization").(model.Organization)
 	if !ok {
-		return commentsPagination, errors.New("TOKEN_DATA_INVALID")
+		return response, group, errors.New("TOKEN_DATA_INVALID")
 	}
-	pagination, ok = c.MustGet("pagination").(model.Pagination)
+	response.CommentsPagination.Pagination, ok = c.MustGet("pagination").(model.Pagination)
 	if !ok {
-		return commentsPagination, errors.New("PAGINATION_DATA_INVALID")
+		return response, group, errors.New("PAGINATION_DATA_INVALID")
 	}
-	commentsPagination.Pagination = pagination
-	commentsPagination.Comments, err = app.DB1.GetCommentsByOrganizationID(organization.ID, commentsPagination.Pagination)
+	response.CommentsPagination.Comments, err = app.DB1.GetCommentsByOrganizationID(organization.ID, commentsPagination.Pagination)
 	if err != nil {
-		return commentsPagination, err
+		return response, group, err
 	}
-
-	return commentsPagination, err
+	return response, group, err
 }
 
 //DeleteCommentsByOrganization function
-func DeleteCommentsByOrganization(app *middleware.App, c *gin.Context) (int64, error) {
+func DeleteCommentsByOrganization(c *gin.Context, app *middleware.App) (interface{}, string, error) {
 	var err error
-	var deleteCount int64
+	var response CommentsDeleteResponse
+	group := "deleteComments"
 	organization, ok := c.MustGet("organization").(model.Organization)
 	if !ok {
-		return deleteCount, errors.New("TOKEN_DATA_INVALID")
+		return response, group, errors.New("TOKEN_DATA_INVALID")
 	}
-	deleteCount, err = app.DB1.DeleteCommentsByOrganizationID(organization.ID)
+	response.DeleteCount, err = app.DB1.DeleteCommentsByOrganizationID(organization.ID)
 	if err != nil {
-		return deleteCount, err
+		return response, group, err
 	}
-	return deleteCount, err
+	return response, group, err
 }

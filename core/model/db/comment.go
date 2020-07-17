@@ -6,12 +6,9 @@ import (
 )
 
 //CreateComment function
-func (db *DB1) CreateComment(comment model.Comment) (model.Comment, error) {
+func (db *DB1) CreateComment(comment *model.Comment) error {
 	err := db.Create(&comment).Error
-	if err != nil {
-		return comment, err
-	}
-	return comment, err
+	return err
 }
 
 //GetCommentsByOrganizationID function
