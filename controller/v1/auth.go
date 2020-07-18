@@ -18,7 +18,7 @@ type LoginCredential struct {
 
 //AuthLoginResponse struct
 type AuthLoginResponse struct {
-	Message string           `default:"success" json:"message" groups:"login"`
+	Message string           `json:"message" groups:"login"`
 	Token   middleware.Token `json:"token" groups:"login"`
 }
 
@@ -26,8 +26,10 @@ type AuthLoginResponse struct {
 func SubmitLogin(c *gin.Context, app *middleware.App) (interface{}, string, error) {
 	var memberToken middleware.MemberToken
 	var err error
-	var response AuthLoginResponse
 	var loginCredential LoginCredential
+	response := AuthLoginResponse{
+		Message: "success",
+	}
 	group := "login"
 	c.ShouldBindJSON(&loginCredential)
 	db := app.DB1

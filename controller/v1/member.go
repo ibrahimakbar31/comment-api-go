@@ -19,7 +19,9 @@ func GetMembersByOrganization(c *gin.Context, app *middleware.App) (interface{},
 	var err error
 	var membersPagination model.MembersPagination
 	var pagination model.Pagination
-	var response MembersGetResponse
+	response := MembersGetResponse{
+		Message: "success",
+	}
 	group := "membersOrganization"
 	response.Message = "success"
 	organization, ok := c.MustGet("organization").(model.Organization)

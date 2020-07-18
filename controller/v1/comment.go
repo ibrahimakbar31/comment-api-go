@@ -33,7 +33,9 @@ type CommentsDeleteResponse struct {
 func CreateComment(c *gin.Context, app *middleware.App) (interface{}, string, error) {
 	var err error
 	var commentInput model.CommentCreate
-	var response CommentCreateResponse
+	response := CommentCreateResponse{
+		Message: "success",
+	}
 	group := "comment"
 	memberToken, ok := c.MustGet("memberToken").(middleware.MemberToken)
 	if !ok {
@@ -71,7 +73,9 @@ func CreateComment(c *gin.Context, app *middleware.App) (interface{}, string, er
 func GetCommentsByOrganization(c *gin.Context, app *middleware.App) (interface{}, string, error) {
 	var err error
 	var commentsPagination model.CommentsPagination
-	var response CommentsGetResponse
+	response := CommentsGetResponse{
+		Message: "success",
+	}
 	group := "orgComments"
 	organization, ok := c.MustGet("organization").(model.Organization)
 	if !ok {
@@ -93,7 +97,9 @@ func GetCommentsByOrganization(c *gin.Context, app *middleware.App) (interface{}
 //DeleteCommentsByOrganization function
 func DeleteCommentsByOrganization(c *gin.Context, app *middleware.App) (interface{}, string, error) {
 	var err error
-	var response CommentsDeleteResponse
+	response := CommentsDeleteResponse{
+		Message: "success",
+	}
 	group := "deleteComments"
 	organization, ok := c.MustGet("organization").(model.Organization)
 	if !ok {
