@@ -96,7 +96,7 @@ func (token Token) Validate(app *App) (MemberToken, error) {
 		db := app.DB1
 		memberToken.Member, err = db.GetMemberByID(memberToken.Member.ID)
 		if err != nil {
-			return memberToken, err
+			return memberToken, errors.New("UNAUTHORIZED")
 		}
 	}
 	return memberToken, err

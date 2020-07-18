@@ -16,17 +16,29 @@
         "TokenExpMinutes": 1440,
         "AvatarURL": "https://thisurlfromconfig.com"
     },
+    "Test": {
+        "DB1": {
+            "Brand": "postgres",
+            "Host": "",
+            "Port": "",
+            "User": "",
+            "Password": "",
+            "DBName": ""
+        },
+        "TokenExpMinutes": 1440,
+        "AvatarURL": ""
+    },
     "Staging": {
         "DB1": {
             "Brand": "postgres",
-            "Host": "172.23.240.1",
-            "Port": "5432",
-            "User": "postgres",
-            "Password": "123456",
-            "DBName": "comment_db_master"
+            "Host": "",
+            "Port": "",
+            "User": "",
+            "Password": "",
+            "DBName": ""
         },
         "TokenExpMinutes": 1440,
-        "AvatarURL": "https://thisurlfromconfig.com"
+        "AvatarURL": ""
     },
     "Production": {
         "DB1": {
@@ -37,7 +49,7 @@
             "Password": "",
             "DBName": ""
         },
-        "TokenExpMinutes": 1,
+        "TokenExpMinutes": 1440,
         "AvatarURL": ""
     }
 }

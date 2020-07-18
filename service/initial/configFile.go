@@ -11,7 +11,7 @@ import (
 func GetConfigFile() error {
 	getFilename := os.Getenv("GOCONFIGFILENAME")
 	if getFilename == "" {
-		getFilename = "config-example"
+		getFilename = "config"
 	}
 	viper.SetConfigName(getFilename)
 	viper.SetConfigType("json")

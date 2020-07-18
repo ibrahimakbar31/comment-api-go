@@ -34,7 +34,9 @@ func GetMembersByOrganization(c *gin.Context, app *middleware.App) (interface{},
 	membersPagination.Pagination = pagination
 	membersPagination.Members, err = app.DB1.GetMembersByOrganizationID(organization.ID, membersPagination.Pagination)
 	if err != nil {
-		return response, group, err
+		if err.Error() == "record not found" {
+			return response, group, nil
+		}
 	}
 	response.MembersPagination = membersPagination
 	return response, group, err

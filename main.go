@@ -32,9 +32,9 @@ func main() {
 	}
 	isMigration := viper.GetBool("Migration")
 	if isMigration == true {
-		println("migrating table....")
+		println("checking migrating table....")
 		postgres.DB1Migration(app.DB1)
-		println("migration done.")
+		println("checking migration done.")
 	}
 	router.InitAllRoutes(&app)
 	port := viper.GetString("Port")

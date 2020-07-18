@@ -11,21 +11,21 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-//CommentPostResponse struct
-type CommentPostResponse struct {
-	Message string        `default:"success" json:"message" groups:"comment"`
+//CommentCreateResponse struct
+type CommentCreateResponse struct {
+	Message string        `json:"message" groups:"comment"`
 	Comment model.Comment `json:"comment" groups:"comment"`
 }
 
 //CommentsGetResponse struct
 type CommentsGetResponse struct {
-	Message string `default:"success" json:"message" groups:"orgComments"`
+	Message string `json:"message" groups:"orgComments"`
 	model.CommentsPagination
 }
 
 //CommentsDeleteResponse struct
 type CommentsDeleteResponse struct {
-	Message     string `default:"success" json:"message" groups:"deleteComments"`
+	Message     string `json:"message" groups:"deleteComments"`
 	DeleteCount int64  `json:"delete_count" groups:"deleteComments"`
 }
 
@@ -33,7 +33,7 @@ type CommentsDeleteResponse struct {
 func CreateComment(c *gin.Context, app *middleware.App) (interface{}, string, error) {
 	var err error
 	var commentInput model.CommentCreate
-	var response CommentPostResponse
+	var response CommentCreateResponse
 	group := "comment"
 	memberToken, ok := c.MustGet("memberToken").(middleware.MemberToken)
 	if !ok {
@@ -83,7 +83,9 @@ func GetCommentsByOrganization(c *gin.Context, app *middleware.App) (interface{}
 	}
 	response.CommentsPagination.Comments, err = app.DB1.GetCommentsByOrganizationID(organization.ID, commentsPagination.Pagination)
 	if err != nil {
-		return response, group, err
+		if err.Error() == "record not found" {
+			return response, group, nil
+		}
 	}
 	return response, group, err
 }
