@@ -39,7 +39,7 @@ func (output Output) Handler() {
 		var errData model.APIError
 		err := db.Where("name = ?", output.Err.Error()).First(&errData).Error
 		if err != nil {
-			ResponseError(output.Ctx, output.Err)
+			ResponseDefaultError(output.Ctx, output.Err)
 		} else {
 			marshalData, _ := GenerateMarshal([]string{"error"}, errData)
 			output.Ctx.JSON(errData.Code, marshalData)
@@ -53,34 +53,20 @@ func (output Output) Handler() {
 //ResponseHandler function to handle response data from controller
 func (app *App) ResponseHandler(f func(*gin.Context, *App) (interface{}, string, error)) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		interfaceData, groupName, err := f(c, app)
-		/*var responseData = Output{
+		interfaceData, group, err := f(c, app)
+		responseData := Output{
 			Ctx:        c,
 			Err:        err,
 			Group:      group,
 			StructData: interfaceData,
 			App:        app,
 		}
-		responseData.Handler()*/
-		if err != nil {
-			db := app.DB1
-			var errData model.APIError
-			err := db.Where("name = ?", err.Error()).First(&errData).Error
-			if err != nil {
-				ResponseError(c, err)
-			} else {
-				marshalData, _ := GenerateMarshal([]string{"error"}, errData)
-				c.JSON(errData.Code, marshalData)
-			}
-		} else {
-			var marshalData, _ = GenerateMarshal([]string{groupName}, interfaceData)
-			c.JSON(http.StatusOK, marshalData)
-		}
+		responseData.Handler()
 	}
 }
 
-//ResponseError function
-func ResponseError(c *gin.Context, err error) {
+//ResponseDefaultError function
+func ResponseDefaultError(c *gin.Context, err error) {
 	var errData model.APIError
 	errData.ID = 0
 	errData.Code = 400
@@ -208,7 +194,6 @@ func (app *App) ValidateInput(validationName string) gin.HandlerFunc {
 					pagination.Page = 1
 				}
 			}
-			//fmt.Printf("%+v\n", pagination)
 			c.Set("pagination", pagination)
 			c.Next()
 		default:
@@ -219,14 +204,14 @@ func (app *App) ValidateInput(validationName string) gin.HandlerFunc {
 
 //GenerateError to generate error output
 func (app *App) GenerateError(c *gin.Context, err error) {
-	output := Output{
+	responseData := Output{
 		Ctx:        c,
 		Err:        err,
 		Group:      "error",
 		StructData: err,
 		App:        app,
 	}
-	output.Handler()
+	responseData.Handler()
 }
 
 // GetDB function to get a database connection
@@ -234,7 +219,8 @@ func (app *App) GetDB() error {
 	var err error
 	app.DB1, err = postgres.ConnectDB1()
 	if err != nil {
-		return errors.New("cannot connect DB")
+		return err
+		//return errors.New("cannot connect DB")
 	}
 	return nil
 }

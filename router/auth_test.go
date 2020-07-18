@@ -2,34 +2,36 @@ package router
 
 import (
 	"bytes"
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gin-gonic/gin"
+	"github.com/go-playground/assert/v2"
 	"github.com/ibrahimakbar31/comment-api-go/core/model"
 	"github.com/ibrahimakbar31/comment-api-go/middleware"
 )
 
-func TestNoInputLogin(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-	var app middleware.App
-	InitAllRoutes(&app)
+func TestErrorInputLogin(t *testing.T) {
+	app := GetAppTest(t)
+	CheckErrorInputLogin(t, app, `{}`, "LOGIN_ID_VALUE_INVALID")
+	CheckErrorInputLogin(t, app, `{"login_id":"ibr"}`, "LOGIN_ID_VALUE_INVALID")
+	CheckErrorInputLogin(t, app, `{"login_id":"ibrahi%$#","password":"test123"}`, "LOGIN_ID_VALUE_INVALID")
+	CheckErrorInputLogin(t, app, `{"login_id":"ibrahim1","password":"test123"}`, "LOGIN_INVALID")
+	CheckErrorInputLogin(t, app, `{"login_id":"ibrahim1@gmail.com","password":"12345"}`, "LOGIN_INVALID")
+}
+
+func CheckErrorInputLogin(t *testing.T, app *middleware.App, input string, errorNameExpected string) {
+	var jsonStr = []byte(input)
 	w := httptest.NewRecorder()
-	//handler := http.HandlerFunc(HealthCheckHandler)
-	var jsonStr = []byte(`{"login_id":"test"}`)
-	req, _ := http.NewRequest("POST", "/v1/auth/login", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "/v1/auth/login", bytes.NewBuffer(jsonStr))
 	app.Router.ServeHTTP(w, req)
-	bodyStr := w.Body.String()
-	//app.Router.
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	assert.Equal(t, w.Code, 400)
 	var apiError model.APIError
-	json.Unmarshal([]byte(bodyStr), &apiError)
-	fmt.Printf("%+v\n", apiError)
-	if w.Code == 400 {
-		t.Logf("test pass, expected got 400 error")
-	} else {
-		t.Fatalf("wrong status code. expected 400")
+	MarshallingTestErrorResponse(t, w.Body.String(), &apiError)
+	if apiError.Name != errorNameExpected {
+		t.Errorf("invalid api error name. Got: " + apiError.Name)
 	}
 }
