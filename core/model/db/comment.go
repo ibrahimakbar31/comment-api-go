@@ -7,7 +7,7 @@ import (
 
 //CreateComment function
 func (db *DB1) CreateComment(comment *model.Comment) error {
-	err := db.Create(&comment).Error
+	err := db.Set("gorm:association_autoupdate", false).Create(&comment).Error
 	return err
 }
 

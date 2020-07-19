@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strings"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
@@ -30,6 +31,22 @@ func (member *Member) AfterFind() (err error) {
 	avatarURL := viper.GetString(viper.GetString("Env") + ".AvatarURL")
 	fullPath := avatarURL + "/" + member.Avatar
 	member.Avatar = fullPath
+	return
+}
+
+//BeforeUpdate member hook function
+func (member *Member) BeforeUpdate() (err error) {
+	url := viper.GetString(viper.GetString("Env") + ".AvatarURL")
+	url = url + "/"
+	strings.ReplaceAll(member.Avatar, url, "")
+	return
+}
+
+//BeforeSave member hook function
+func (member *Member) BeforeSave() (err error) {
+	url := viper.GetString(viper.GetString("Env") + ".AvatarURL")
+	url = url + "/"
+	strings.ReplaceAll(member.Avatar, url, "")
 	return
 }
 

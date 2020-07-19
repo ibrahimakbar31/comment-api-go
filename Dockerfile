@@ -5,7 +5,7 @@ ENV GO111MODULE=on \
     GOOS=linux \
     GOARCH=amd64 \
     GOCUSTOMENV=staging \
-    GOCONFIGFILENAME=config-example
+    GOCONFIGFILENAME=config
 
 WORKDIR /app
 
